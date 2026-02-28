@@ -60,6 +60,71 @@
             z-index: 1000;
         }
 
+        /* Hide desktop theme toggle on mobile */
+        @media (max-width: 1024px) {
+            .theme-toggle {
+                display: none;
+            }
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--bg-surface);
+            border-top: 1px solid var(--border-default);
+            padding: var(--space-3);
+            padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
+            z-index: 100;
+            box-shadow: var(--shadow-large);
+            justify-content: space-between;
+            gap: var(--space-2);
+        }
+
+        @media (max-width: 1024px) {
+            .mobile-nav {
+                display: flex;
+            }
+
+            .container {
+                padding-bottom: 100px; /* Prevent content overlap with bottom nav */
+            }
+        }
+
+        .nav-btn {
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            background-color: var(--bg-surface-overlay);
+            color: var(--text-primary);
+            border: 1px solid var(--border-default);
+            font-size: var(--text-sm);
+            font-weight: var(--font-medium);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-height: 44px; /* Touch target size */
+            flex: 1;
+        }
+
+        .nav-btn.icon-only {
+            flex: 0 0 44px;
+            padding: var(--space-2);
+            font-size: var(--text-lg);
+        }
+
+        .nav-btn:hover,
+        .nav-btn:active {
+            background-color: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+        }
+
         .app-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -328,12 +393,21 @@
         }
 
         function updateThemeUI(theme) {
+            const desktopSun = document.getElementById('theme-icon-sun');
+            const desktopMoon = document.getElementById('theme-icon-moon');
+            const mobileSun = document.getElementById('mobile-theme-icon-sun');
+            const mobileMoon = document.getElementById('mobile-theme-icon-moon');
+
             if (theme === 'dark') {
-                themeIconSun.style.display = 'none';
-                themeIconMoon.style.display = 'block';
+                desktopSun.style.display = 'none';
+                desktopMoon.style.display = 'block';
+                if (mobileSun) mobileSun.style.display = 'none';
+                if (mobileMoon) mobileMoon.style.display = 'block';
             } else {
-                themeIconSun.style.display = 'block';
-                themeIconMoon.style.display = 'none';
+                desktopSun.style.display = 'block';
+                desktopMoon.style.display = 'none';
+                if (mobileSun) mobileSun.style.display = 'block';
+                if (mobileMoon) mobileMoon.style.display = 'none';
             }
         }
 
@@ -380,5 +454,28 @@
             checkAppStatus('http://192.168.178.100:5000', 'ml-status-text');
         }, 30000);
     </script>
+
+    <!-- Mobile Navigation (hidden on desktop) -->
+    <nav class="mobile-nav">
+        <a href="http://192.168.178.100:8080" class="nav-btn icon-only" aria-label="Home">
+            🏠
+        </a>
+        <button class="nav-btn icon-only" onclick="toggleTheme()" id="mobileThemeBtn" aria-label="Toggle theme">
+            <svg id="mobile-theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg id="mobile-theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+    </nav>
 </body>
 </html>
