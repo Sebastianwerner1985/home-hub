@@ -147,6 +147,24 @@
             border-radius: var(--radius-md);
         }
 
+        .status-indicator .status-text {
+            color: var(--text-secondary);
+        }
+
+        .status-indicator .status-text.online {
+            color: var(--color-success);
+            font-weight: var(--font-medium);
+        }
+
+        .status-indicator .status-text.offline {
+            color: var(--text-muted);
+            font-weight: var(--font-medium);
+        }
+
+        .status-indicator .status-text.checking {
+            color: var(--text-secondary);
+        }
+
         .status-dot {
             width: 8px;
             height: 8px;
@@ -244,7 +262,7 @@
                 </div>
                 <div class="status-indicator">
                     <div class="status-dot checking" id="energy-status"></div>
-                    <span id="energy-status-text">Checking...</span>
+                    <span class="status-text checking" id="energy-status-text">⏳ Checking...</span>
                 </div>
             </a>
 
@@ -262,7 +280,7 @@
                 </div>
                 <div class="status-indicator">
                     <div class="status-dot checking" id="heizung-status"></div>
-                    <span id="heizung-status-text">Checking...</span>
+                    <span class="status-text checking" id="heizung-status-text">⏳ Checking...</span>
                 </div>
             </a>
 
@@ -280,7 +298,7 @@
                 </div>
                 <div class="status-indicator">
                     <div class="status-dot checking" id="ml-status"></div>
-                    <span id="ml-status-text">Checking...</span>
+                    <span class="status-text checking" id="ml-status-text">⏳ Checking...</span>
                 </div>
             </a>
         </div>
@@ -345,10 +363,12 @@
                 // With no-cors mode, we can't check response status
                 // If fetch doesn't throw, assume the service is reachable
                 statusDot.className = 'status-dot online';
-                statusText.textContent = 'Online';
+                statusText.className = 'status-text online';
+                statusText.textContent = '● Online';
             } catch (error) {
                 statusDot.className = 'status-dot offline';
-                statusText.textContent = 'Offline';
+                statusText.className = 'status-text offline';
+                statusText.textContent = '○ Offline';
             }
         }
 
