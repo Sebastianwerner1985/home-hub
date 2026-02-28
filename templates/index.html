@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Hub - Smart Home Dashboard</title>
+
+    <!-- iOS Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Home Hub">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icons/home.svg') }}">
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- SnowUI Design System -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/snowui-tokens.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/snowui-components.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--space-8) var(--space-6);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .header h1 {
+            font-size: var(--text-3xl);
+            font-weight: var(--font-semibold);
+            margin-bottom: var(--space-2);
+            color: var(--text-primary);
+        }
+
+        .header p {
+            font-size: var(--text-lg);
+            color: var(--text-muted);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: var(--space-4);
+            right: var(--space-4);
+            z-index: 1000;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .app-card {
+            background-color: var(--bg-surface);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-medium);
+            transition: all var(--transition-normal);
+            border: 2px solid transparent;
+            text-decoration: none;
+            display: block;
+        }
+
+        .app-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-large);
+            border-color: var(--color-primary);
+        }
+
+        .app-card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .app-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .app-icon.energy {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        .app-icon.heizung {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+
+        .app-icon.ml {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+        .app-info {
+            flex: 1;
+        }
+
+        .app-title {
+            font-size: var(--text-xl);
+            font-weight: var(--font-semibold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-1);
+        }
+
+        .app-subtitle {
+            font-size: var(--text-sm);
+            color: var(--text-muted);
+        }
+
+        .app-description {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: var(--space-4);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: var(--text-sm);
+            padding: var(--space-2) var(--space-3);
+            background-color: var(--bg-surface-overlay);
+            border-radius: var(--radius-md);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .status-dot.online {
+            background-color: var(--color-success);
+        }
+
+        .status-dot.offline {
+            background-color: var(--color-error);
+            animation: none;
+        }
+
+        .status-dot.checking {
+            background-color: var(--color-warning);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .footer {
+            text-align: center;
+            padding: var(--space-6);
+            color: var(--text-muted);
+            font-size: var(--text-sm);
+            border-top: 1px solid var(--border-default);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--space-4) var(--space-3);
+            }
+
+            .header h1 {
+                font-size: var(--text-2xl);
+            }
+
+            .header p {
+                font-size: var(--text-base);
+            }
+
+            .app-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-4);
+            }
+
+            .app-card {
+                padding: var(--space-4);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle btn btn-secondary btn-icon" onclick="toggleTheme()" id="themeToggleBtn" aria-label="Toggle theme">
+        <svg id="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg id="theme-icon-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="container">
+        <div class="header">
+            <h1>Smart Home Hub</h1>
+            <p>Your central dashboard for home monitoring and control</p>
+        </div>
+
+        <div class="app-grid">
+            <!-- Energy Dashboard -->
+            <a href="http://192.168.178.100:5002" class="app-card" id="energy-card">
+                <div class="app-card-header">
+                    <div class="app-icon energy">⚡</div>
+                    <div class="app-info">
+                        <div class="app-title">Energy Dashboard</div>
+                        <div class="app-subtitle">Real-time monitoring</div>
+                    </div>
+                </div>
+                <div class="app-description">
+                    Monitor your energy consumption in real-time, track historical usage patterns, and analyze costs with detailed charts and insights.
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot checking" id="energy-status"></div>
+                    <span id="energy-status-text">Checking...</span>
+                </div>
+            </a>
+
+            <!-- Heizung Tracker -->
+            <a href="http://192.168.178.100:5001" class="app-card" id="heizung-card">
+                <div class="app-card-header">
+                    <div class="app-icon heizung">🔥</div>
+                    <div class="app-info">
+                        <div class="app-title">Heizung Tracker</div>
+                        <div class="app-subtitle">Oil heating monitor</div>
+                    </div>
+                </div>
+                <div class="app-description">
+                    Track oil consumption, monitor burner starts and operating hours, analyze heating costs and efficiency patterns.
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot checking" id="heizung-status"></div>
+                    <span id="heizung-status-text">Checking...</span>
+                </div>
+            </a>
+
+            <!-- ML Training -->
+            <a href="http://192.168.178.100:5000" class="app-card" id="ml-card">
+                <div class="app-card-header">
+                    <div class="app-icon ml">🤖</div>
+                    <div class="app-info">
+                        <div class="app-title">ML Training</div>
+                        <div class="app-subtitle">Oil meter reader</div>
+                    </div>
+                </div>
+                <div class="app-description">
+                    Train a custom machine learning model to automatically read your mechanical oil meter using computer vision.
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot checking" id="ml-status"></div>
+                    <span id="ml-status-text">Checking...</span>
+                </div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>Smart Home Hub v1.0 | Powered by SnowUI Design System</p>
+        </div>
+    </div>
+
+    <script>
+        // Theme Management
+        const html = document.documentElement;
+        const themeIconSun = document.getElementById('theme-icon-sun');
+        const themeIconMoon = document.getElementById('theme-icon-moon');
+
+        // Initialize theme from localStorage (default to dark)
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            html.setAttribute('data-theme', savedTheme);
+            updateThemeUI(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeUI(newTheme);
+        }
+
+        function updateThemeUI(theme) {
+            if (theme === 'dark') {
+                themeIconSun.style.display = 'none';
+                themeIconMoon.style.display = 'block';
+            } else {
+                themeIconSun.style.display = 'block';
+                themeIconMoon.style.display = 'none';
+            }
+        }
+
+        // Initialize theme on page load
+        initTheme();
+
+        // Status Check Functions
+        async function checkAppStatus(url, statusDotId, statusTextId) {
+            const statusDot = document.getElementById(statusDotId);
+            const statusText = document.getElementById(statusTextId);
+
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                const response = await fetch(url, {
+                    method: 'HEAD',
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                // With no-cors mode, we can't check response status
+                // If fetch doesn't throw, assume the service is reachable
+                statusDot.className = 'status-dot online';
+                statusText.textContent = 'Online';
+            } catch (error) {
+                statusDot.className = 'status-dot offline';
+                statusText.textContent = 'Offline';
+            }
+        }
+
+        // Check all app statuses on load
+        window.addEventListener('load', () => {
+            checkAppStatus('http://192.168.178.100:5002', 'energy-status', 'energy-status-text');
+            checkAppStatus('http://192.168.178.100:5001', 'heizung-status', 'heizung-status-text');
+            checkAppStatus('http://192.168.178.100:5000', 'ml-status', 'ml-status-text');
+        });
+
+        // Refresh status every 30 seconds
+        setInterval(() => {
+            checkAppStatus('http://192.168.178.100:5002', 'energy-status', 'energy-status-text');
+            checkAppStatus('http://192.168.178.100:5001', 'heizung-status', 'heizung-status-text');
+            checkAppStatus('http://192.168.178.100:5000', 'ml-status', 'ml-status-text');
+        }, 30000);
+    </script>
+</body>
+</html>
