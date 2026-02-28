@@ -80,8 +80,8 @@
             padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom, 0px));
             z-index: 100;
             box-shadow: var(--shadow-large);
-            justify-content: space-between;
-            gap: var(--space-2);
+            justify-content: center;
+            gap: var(--space-4);
         }
 
         @media (max-width: 1024px) {
@@ -109,11 +109,11 @@
             cursor: pointer;
             transition: all var(--transition-fast);
             min-height: 44px; /* Touch target size */
-            flex: 1;
+            flex: 0 0 auto;
         }
 
         .nav-btn.icon-only {
-            flex: 0 0 44px;
+            width: 44px;
             padding: var(--space-2);
             font-size: var(--text-lg);
         }
@@ -373,8 +373,6 @@
     <script>
         // Theme Management
         const html = document.documentElement;
-        const themeIconSun = document.getElementById('theme-icon-sun');
-        const themeIconMoon = document.getElementById('theme-icon-moon');
 
         // Initialize theme from localStorage (default to dark)
         function initTheme() {
@@ -393,19 +391,22 @@
         }
 
         function updateThemeUI(theme) {
+            // Desktop theme icons
             const desktopSun = document.getElementById('theme-icon-sun');
             const desktopMoon = document.getElementById('theme-icon-moon');
+
+            // Mobile theme icons
             const mobileSun = document.getElementById('mobile-theme-icon-sun');
             const mobileMoon = document.getElementById('mobile-theme-icon-moon');
 
             if (theme === 'dark') {
-                desktopSun.style.display = 'none';
-                desktopMoon.style.display = 'block';
+                if (desktopSun) desktopSun.style.display = 'none';
+                if (desktopMoon) desktopMoon.style.display = 'block';
                 if (mobileSun) mobileSun.style.display = 'none';
                 if (mobileMoon) mobileMoon.style.display = 'block';
             } else {
-                desktopSun.style.display = 'block';
-                desktopMoon.style.display = 'none';
+                if (desktopSun) desktopSun.style.display = 'block';
+                if (desktopMoon) desktopMoon.style.display = 'none';
                 if (mobileSun) mobileSun.style.display = 'block';
                 if (mobileMoon) mobileMoon.style.display = 'none';
             }
