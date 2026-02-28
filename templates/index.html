@@ -261,7 +261,6 @@
                     Monitor your energy consumption in real-time, track historical usage patterns, and analyze costs with detailed charts and insights.
                 </div>
                 <div class="status-indicator">
-                    <div class="status-dot checking" id="energy-status"></div>
                     <span class="status-text checking" id="energy-status-text">⏳ Checking...</span>
                 </div>
             </a>
@@ -279,7 +278,6 @@
                     Track oil consumption, monitor burner starts and operating hours, analyze heating costs and efficiency patterns.
                 </div>
                 <div class="status-indicator">
-                    <div class="status-dot checking" id="heizung-status"></div>
                     <span class="status-text checking" id="heizung-status-text">⏳ Checking...</span>
                 </div>
             </a>
@@ -297,7 +295,6 @@
                     Train a custom machine learning model to automatically read your mechanical oil meter using computer vision.
                 </div>
                 <div class="status-indicator">
-                    <div class="status-dot checking" id="ml-status"></div>
                     <span class="status-text checking" id="ml-status-text">⏳ Checking...</span>
                 </div>
             </a>
@@ -344,8 +341,7 @@
         initTheme();
 
         // Status Check Functions
-        async function checkAppStatus(url, statusDotId, statusTextId) {
-            const statusDot = document.getElementById(statusDotId);
+        async function checkAppStatus(url, statusTextId) {
             const statusText = document.getElementById(statusTextId);
 
             try {
@@ -362,11 +358,9 @@
 
                 // With no-cors mode, we can't check response status
                 // If fetch doesn't throw, assume the service is reachable
-                statusDot.className = 'status-dot online';
                 statusText.className = 'status-text online';
                 statusText.textContent = '● Online';
             } catch (error) {
-                statusDot.className = 'status-dot offline';
                 statusText.className = 'status-text offline';
                 statusText.textContent = '○ Offline';
             }
@@ -374,16 +368,16 @@
 
         // Check all app statuses on load
         window.addEventListener('load', () => {
-            checkAppStatus('http://192.168.178.100:5002', 'energy-status', 'energy-status-text');
-            checkAppStatus('http://192.168.178.100:5001', 'heizung-status', 'heizung-status-text');
-            checkAppStatus('http://192.168.178.100:5000', 'ml-status', 'ml-status-text');
+            checkAppStatus('http://192.168.178.100:5002', 'energy-status-text');
+            checkAppStatus('http://192.168.178.100:5001', 'heizung-status-text');
+            checkAppStatus('http://192.168.178.100:5000', 'ml-status-text');
         });
 
         // Refresh status every 30 seconds
         setInterval(() => {
-            checkAppStatus('http://192.168.178.100:5002', 'energy-status', 'energy-status-text');
-            checkAppStatus('http://192.168.178.100:5001', 'heizung-status', 'heizung-status-text');
-            checkAppStatus('http://192.168.178.100:5000', 'ml-status', 'ml-status-text');
+            checkAppStatus('http://192.168.178.100:5002', 'energy-status-text');
+            checkAppStatus('http://192.168.178.100:5001', 'heizung-status-text');
+            checkAppStatus('http://192.168.178.100:5000', 'ml-status-text');
         }, 30000);
     </script>
 </body>
