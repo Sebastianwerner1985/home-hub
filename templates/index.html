@@ -318,9 +318,9 @@
 
         <div class="app-grid">
             <!-- Heizung Tracker -->
-            <a href="http://192.168.178.100:5001" class="app-card" id="heizung-card">
+            <a href="http://192.168.178.100:5003" class="app-card" id="heizung-card">
                 <div class="app-card-header">
-                    <div class="app-icon heizung">🔥</div>
+                    <img src="{{ url_for('static', filename='icons/heizung-icon.svg') }}" class="app-icon" width="56" height="56" alt="Heizung">
                     <div class="app-info">
                         <div class="app-title">Heizung Tracker</div>
                         <div class="app-subtitle">Oil heating monitor</div>
@@ -337,7 +337,7 @@
             <!-- ML Training -->
             <a href="http://192.168.178.100:5000" class="app-card" id="ml-card">
                 <div class="app-card-header">
-                    <div class="app-icon ml">🤖</div>
+                    <img src="{{ url_for('static', filename='icons/ml-icon.svg') }}" class="app-icon" width="56" height="56" alt="ML Training">
                     <div class="app-info">
                         <div class="app-title">ML Training</div>
                         <div class="app-subtitle">Oil meter reader</div>
@@ -354,7 +354,7 @@
             <!-- Energy Dashboard -->
             <a href="http://192.168.178.100:5002" class="app-card" id="energy-card">
                 <div class="app-card-header">
-                    <div class="app-icon energy">⚡</div>
+                    <img src="{{ url_for('static', filename='icons/energy-icon.svg') }}" class="app-icon" width="56" height="56" alt="Energy Dashboard">
                     <div class="app-info">
                         <div class="app-title">Energy Dashboard</div>
                         <div class="app-subtitle">Real-time monitoring</div>
@@ -412,17 +412,20 @@
                 const timeoutId = setTimeout(() => controller.abort(), 5000);
 
                 const response = await fetch(url, {
-                    method: 'HEAD',
-                    mode: 'no-cors',
-                    signal: controller.signal
+                    method: 'GET',
+                    signal: controller.signal,
+                    cache: 'no-cache'
                 });
 
                 clearTimeout(timeoutId);
 
-                // With no-cors mode, we can't check response status
-                // If fetch doesn't throw, assume the service is reachable
-                statusText.className = 'status-text online';
-                statusText.textContent = '● Online';
+                if (response.ok) {
+                    statusText.className = 'status-text online';
+                    statusText.textContent = '● Online';
+                } else {
+                    statusText.className = 'status-text offline';
+                    statusText.textContent = '○ Offline';
+                }
             } catch (error) {
                 statusText.className = 'status-text offline';
                 statusText.textContent = '○ Offline';
@@ -432,14 +435,14 @@
         // Check all app statuses on load
         window.addEventListener('load', () => {
             checkAppStatus('http://192.168.178.100:5002', 'energy-status-text');
-            checkAppStatus('http://192.168.178.100:5001', 'heizung-status-text');
+            checkAppStatus('http://192.168.178.100:5003', 'heizung-status-text');
             checkAppStatus('http://192.168.178.100:5000', 'ml-status-text');
         });
 
         // Refresh status every 30 seconds
         setInterval(() => {
             checkAppStatus('http://192.168.178.100:5002', 'energy-status-text');
-            checkAppStatus('http://192.168.178.100:5001', 'heizung-status-text');
+            checkAppStatus('http://192.168.178.100:5003', 'heizung-status-text');
             checkAppStatus('http://192.168.178.100:5000', 'ml-status-text');
         }, 30000);
     </script>
