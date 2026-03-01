@@ -11,6 +11,10 @@
     <meta name="apple-mobile-web-app-title" content="Home Hub">
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='icons/home.svg') }}">
 
+    <!-- PWA Support -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/home-192.png') }}">
+
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -289,7 +293,7 @@
 </head>
 <body>
     <!-- Theme Toggle -->
-    <button class="theme-toggle btn btn-secondary btn-icon" onclick="toggleTheme()" id="themeToggleBtn" aria-label="Toggle theme">
+    <button class="theme-toggle btn btn-secondary btn-icon" onclick="ThemeSync.toggleTheme()" id="themeToggleBtn" aria-label="Toggle theme">
         <svg id="theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
             <circle cx="12" cy="12" r="5"></circle>
             <line x1="12" y1="1" x2="12" y2="3"></line>
@@ -370,50 +374,34 @@
         </div>
     </div>
 
+    <script src="{{ url_for('static', filename='js/theme-sync.js') }}"></script>
     <script>
-        // Theme Management
-        const html = document.documentElement;
+        // Initialize Theme Sync with UI updates
+        ThemeSync.init({
+            onThemeChange: function(theme) {
+                const isDark = (theme === ThemeSync.THEME_DARK);
 
-        // Initialize theme from localStorage (default to dark)
-        function initTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'dark';
-            html.setAttribute('data-theme', savedTheme);
-            updateThemeUI(savedTheme);
-        }
+                // Desktop theme icons
+                const desktopSun = document.getElementById('theme-icon-sun');
+                const desktopMoon = document.getElementById('theme-icon-moon');
 
-        function toggleTheme() {
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                // Mobile theme icons
+                const mobileSun = document.getElementById('mobile-theme-icon-sun');
+                const mobileMoon = document.getElementById('mobile-theme-icon-moon');
 
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeUI(newTheme);
-        }
-
-        function updateThemeUI(theme) {
-            // Desktop theme icons
-            const desktopSun = document.getElementById('theme-icon-sun');
-            const desktopMoon = document.getElementById('theme-icon-moon');
-
-            // Mobile theme icons
-            const mobileSun = document.getElementById('mobile-theme-icon-sun');
-            const mobileMoon = document.getElementById('mobile-theme-icon-moon');
-
-            if (theme === 'dark') {
-                if (desktopSun) desktopSun.style.display = 'none';
-                if (desktopMoon) desktopMoon.style.display = 'block';
-                if (mobileSun) mobileSun.style.display = 'none';
-                if (mobileMoon) mobileMoon.style.display = 'block';
-            } else {
-                if (desktopSun) desktopSun.style.display = 'block';
-                if (desktopMoon) desktopMoon.style.display = 'none';
-                if (mobileSun) mobileSun.style.display = 'block';
-                if (mobileMoon) mobileMoon.style.display = 'none';
+                if (isDark) {
+                    if (desktopSun) desktopSun.style.display = 'none';
+                    if (desktopMoon) desktopMoon.style.display = 'block';
+                    if (mobileSun) mobileSun.style.display = 'none';
+                    if (mobileMoon) mobileMoon.style.display = 'block';
+                } else {
+                    if (desktopSun) desktopSun.style.display = 'block';
+                    if (desktopMoon) desktopMoon.style.display = 'none';
+                    if (mobileSun) mobileSun.style.display = 'block';
+                    if (mobileMoon) mobileMoon.style.display = 'none';
+                }
             }
-        }
-
-        // Initialize theme on page load
-        initTheme();
+        });
 
         // Status Check Functions
         async function checkAppStatus(url, statusTextId) {
@@ -461,7 +449,7 @@
         <a href="http://192.168.178.100:8080" class="nav-btn icon-only" aria-label="Home">
             🏠
         </a>
-        <button class="nav-btn icon-only" onclick="toggleTheme()" id="mobileThemeBtn" aria-label="Toggle theme">
+        <button class="nav-btn icon-only" onclick="ThemeSync.toggleTheme()" id="mobileThemeBtn" aria-label="Toggle theme">
             <svg id="mobile-theme-icon-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
                 <circle cx="12" cy="12" r="5"></circle>
                 <line x1="12" y1="1" x2="12" y2="3"></line>
