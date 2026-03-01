@@ -10,13 +10,27 @@
   <!-- Rounded square background -->
   <rect width="512" height="512" rx="115" fill="url(#grad-blue-heizung)"/>
 
-  <!-- Flame/droplet icon for heating oil -->
-  <path d="M 256 100 C 256 100, 200 180, 180 240 C 160 300, 180 360, 240 380 C 280 395, 320 395, 360 370 C 390 350, 400 310, 390 270 C 380 230, 340 180, 256 100 Z"
-        fill="white"
-        stroke="white"
-        stroke-width="6"
-        stroke-linejoin="round"/>
+  <!-- Radiator icon -->
+  <g fill="white" stroke="white" stroke-width="8" stroke-linejoin="round">
+    <!-- Top pipe -->
+    <rect x="120" y="140" width="272" height="20" rx="10"/>
 
-  <!-- Inner highlight -->
-  <ellipse cx="240" cy="280" rx="30" ry="50" fill="#dbeafe" opacity="0.5"/>
+    <!-- Bottom pipe -->
+    <rect x="120" y="352" width="272" height="20" rx="10"/>
+
+    <!-- Radiator fins (7 vertical bars) -->
+    <rect x="140" y="160" width="32" height="192" rx="4"/>
+    <rect x="188" y="160" width="32" height="192" rx="4"/>
+    <rect x="236" y="160" width="32" height="192" rx="4"/>
+    <rect x="284" y="160" width="32" height="192" rx="4"/>
+    <rect x="332" y="160" width="32" height="192" rx="4"/>
+
+    <!-- Connection pipes (left and right) -->
+    <rect x="380" y="140" width="16" height="232" rx="8"/>
+    <rect x="116" y="140" width="16" height="232" rx="8"/>
+
+    <!-- Valve indicator (bottom left) -->
+    <circle cx="140" cy="390" r="16" fill="white"/>
+    <circle cx="140" cy="390" r="8" fill="#2563eb"/>
+  </g>
 </svg>
