@@ -1,27 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- Background gradient - SnowUI Primary Blue -->
+  <!-- Background gradient - Blue (SnowUI Primary) -->
   <defs>
-    <linearGradient id="grad-home-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="grad-blue-home" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#60a5fa;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
     </linearGradient>
   </defs>
 
   <!-- Rounded square background -->
-  <rect width="512" height="512" rx="115" fill="url(#grad-home-blue)"/>
+  <rect width="512" height="512" rx="115" fill="url(#grad-blue-home)"/>
 
-  <!-- House icon -->
-  <g fill="white" stroke="white" stroke-width="6" stroke-linejoin="round">
-    <!-- Roof -->
-    <path d="M 256 120 L 140 220 L 140 240 L 160 240 L 160 220 L 256 140 L 352 220 L 352 240 L 372 240 L 372 220 Z"/>
+  <!-- Simple house icon in same style as flame -->
+  <path d="M 256 130 L 130 240 L 130 390 L 210 390 L 210 300 L 302 300 L 302 390 L 382 390 L 382 240 Z"
+        fill="white"
+        stroke="white"
+        stroke-width="6"
+        stroke-linejoin="round"/>
 
-    <!-- House body -->
-    <rect x="180" y="220" width="152" height="160" rx="8"/>
-
-    <!-- Door -->
-    <rect x="236" y="300" width="40" height="80" rx="4" fill="#2563eb"/>
-
-    <!-- Chimney -->
-    <rect x="300" y="160" width="30" height="60" rx="4"/>
-  </g>
+  <!-- Roof with same stroke style -->
+  <path d="M 100 250 L 256 110 L 412 250"
+        fill="none"
+        stroke="white"
+        stroke-width="16"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
 </svg>
