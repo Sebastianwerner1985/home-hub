@@ -318,7 +318,7 @@
 
         <div class="app-grid">
             <!-- Heizung Tracker -->
-            <a href="http://192.168.178.100:5003" class="app-card" id="heizung-card">
+            <a href="http://192.168.178.100:5001" class="app-card" id="heizung-card">
                 <div class="app-card-header">
                     <img src="{{ url_for('static', filename='icons/heizung-icon.svg') }}" class="app-icon" width="56" height="56" alt="Heizung">
                     <div class="app-info">
@@ -435,14 +435,14 @@
         // Check all app statuses on load
         window.addEventListener('load', () => {
             checkAppStatus('http://192.168.178.100:5002', 'energy-status-text');
-            checkAppStatus('http://192.168.178.100:5003', 'heizung-status-text');
+            checkAppStatus('http://192.168.178.100:5001', 'heizung-status-text');
             checkAppStatus('http://192.168.178.100:5000', 'ml-status-text');
         });
 
         // Refresh status every 30 seconds
         setInterval(() => {
             checkAppStatus('http://192.168.178.100:5002', 'energy-status-text');
-            checkAppStatus('http://192.168.178.100:5003', 'heizung-status-text');
+            checkAppStatus('http://192.168.178.100:5001', 'heizung-status-text');
             checkAppStatus('http://192.168.178.100:5000', 'ml-status-text');
         }, 30000);
     </script>
